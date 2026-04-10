@@ -320,17 +320,17 @@ function selectPlan(key) {
 
 function actionBuy(key) {
     tg.HapticFeedback.impactOccurred('medium');
-    tg.openTelegramLink(`https://t.me/${BOT_USERNAME}?start=buy_${key}`);
+    tg.openTelegramLink(`https://t.me/${HryakVpn_bot}?start=buy_${key}`);
 }
 
 function actionTrial() {
     tg.HapticFeedback.impactOccurred('medium');
-    tg.openTelegramLink(`https://t.me/${BOT_USERNAME}?start=trial`);
+    tg.openTelegramLink(`https://t.me/${HryakVpn_bot}?start=trial`);
 }
 
 function renderAccount() {
   const c = document.getElementById('accountContainer');
-  const refLink = `https://t.me/${BOT_USERNAME}?start=ref_${USER.id}`;
+  const refLink = `https://t.me/${HryakVpn_bot}?start=ref_${USER.id}`;
 
   let accountHtml = '';
 
