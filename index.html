@@ -215,7 +215,7 @@ tg.expand();
 tg.setHeaderColor('#0b0d14');
 tg.setBackgroundColor('#0b0d14');
 
-// Имя твоего бота для реферальных ссылок и платежей
+// ВАЖНО: Имя твоего бота для корректной работы ссылок и оплат
 const BOT_USERNAME = 'HryakVpn_bot'; 
 
 const SALE_END_DATE = new Date("2026-04-18T23:59:59");
@@ -321,17 +321,17 @@ function selectPlan(key) {
 
 function actionBuy(key) {
     tg.HapticFeedback.impactOccurred('medium');
-    tg.openTelegramLink(`https://t.me/${HryakVpn_bot}?start=buy_${key}`);
+    tg.openTelegramLink(`https://t.me/${BOT_USERNAME}?start=buy_${key}`);
 }
 
 function actionTrial() {
     tg.HapticFeedback.impactOccurred('medium');
-    tg.openTelegramLink(`https://t.me/${HryakVpn_bot}?start=trial`);
+    tg.openTelegramLink(`https://t.me/${BOT_USERNAME}?start=trial`);
 }
 
 function renderAccount() {
   const c = document.getElementById('accountContainer');
-  const refLink = `https://t.me/${HryakVpn_bot}?start=ref_${USER.id}`;
+  const refLink = `https://t.me/${BOT_USERNAME}?start=ref_${USER.id}`;
 
   let accountHtml = '';
 
