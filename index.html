@@ -320,14 +320,12 @@ function selectPlan(key) {
 
 function actionBuy(key) {
     tg.HapticFeedback.impactOccurred('medium');
-    tg.sendData(JSON.stringify({ action: 'buy', plan: key }));
-    tg.close();
+    tg.openTelegramLink(`https://t.me/${BOT_USERNAME}?start=buy_${key}`);
 }
 
 function actionTrial() {
     tg.HapticFeedback.impactOccurred('medium');
-    tg.sendData(JSON.stringify({ action: 'trial' }));
-    tg.close();
+    tg.openTelegramLink(`https://t.me/${BOT_USERNAME}?start=trial`);
 }
 
 function renderAccount() {
