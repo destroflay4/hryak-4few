@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>HRYAK VPN</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+:root{
+  --bg:      #0b0d14;
+  --bg2:     #0f1219;
+  --bg3:     #141720;
+  --card:    #161922;
+  --border:  rgba(0,210,200,0.12);
+  --teal:    #00d4c8;
+  --teal2:   #00a8c8;
+  --teal3:   #007a9e;
+  --glow:    rgba(0,212,200,0.25);
+  --text:    #e8f4f4;
+  --text2:   rgba(232,244,244,0.55);
+  --text3:   rgba(232,244,244,0.28);
+  --gold:    #ffd740;
+  --red:     #ff4f6d;
+  --green:   #00e5a0;
+}
+
+html,body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Exo 2',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── BG pattern ── */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 80% 40% at 50% -10%, rgba(0,180,180,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 30% at 80% 80%, rgba(0,100,150,0.08) 0%, transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── HEADER ── */
+.header{
+  position:relative;
+  padding:28px 20px 22px;
+  text-align:center;
+  overflow:hidden;
+  z-index:1;
+}
+
+.header::after{
+  content:'';
+  position:absolute;
+  bottom:0; left:10%; right:10%;
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--teal), transparent);
+  opacity:0.4;
+}
+
+/* SVG logo boar */
+.logo-wrap{
+  width:90px;
+  height:90px;
+  margin:0 auto 14px;
+  position:relative;
+  filter:drop-shadow(0 0 18px rgba(0,212,200,0.5));
+  animation:float 4s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+}
+
+.brand-name{
+  font-family:'Rajdhani',sans-serif;
+  font-size:30px;
+  font-weight:700;
+  letter-spacing:4px;
+  color:#fff;
+  text-shadow:0 0 20px rgba(0,212,200,0.4);
+  line-height:1;
+}
+
+.brand-vpn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-top:3px;
+}
+
+.brand-vpn::before,.brand-vpn::after{
+  content:'';
+  flex:1;
+  max-width:40px;
+  height:1.5px;
+  background:linear-gradient(90deg, transparent, var(--teal));
+}
+
+.brand-vpn::after{background:linear-gradient(90deg, var(--teal), transparent)}
+
+.brand-vpn span{
+  font-family:'Rajdhani',sans-serif;
+  font-size:16px;
+  font-weight:600;
+  letter-spacing:6px;
+  color:var(--teal);
+}
+
+.brand-tagline{
+  font-size:11px;
+  letter-spacing:2px;
+  color:var(--text3);
+  text-transform:uppercase;
+  margin-top:6px;
+}
+
+/* ── SALE BANNER ── */
+.sale-banner{
+  margin:12px 16px;
+  background:linear-gradient(135deg, rgba(0,180,160,0.15), rgba(0,100,140,0.15));
+  border:1px solid rgba(0,212,200,0.3);
+  border-radius:14px;
+  padding:12px 16px;
+  display:none;
+  align-items:center;
+  gap:12px;
+  position:relative;
+  overflow:hidden;
+  z-index:1;
+}
+
+.sale-banner::before{
+  content:'';
+  position:absolute;
+  top:-50%;left:-50%;width:200%;height:200%;
+  background:conic-gradient(transparent 0deg, rgba(0,212,200,0.05) 90deg, transparent 180deg);
+  animation:spin 6s linear infinite;
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.sale-banner.visible{display:flex}
+
+.sale-fire{font-size:28px;flex-shrink:0;position:relative}
+.sale-info{flex:1;position:relative}
+.sale-title{
+  font-family:'Rajdhani',sans-serif;
+  font-size:16px;
+  font-weight:700;
+  letter-spacing:2px;
+  color:var(--teal);
+}
+.sale-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.sale-countdown{
+  position:relative;
+  text-align:right;
+}
+.sale-time{
+  font-family:'Rajdhani',sans-serif;
+  font-size:22px;
+  font-weight:700;
+  color:#fff;
+  line-height:1;
+}
+.sale-time-label{font-size:10px;color:var(--text3);letter-spacing:1px}
+
+/* ── NAV ── */
+.nav{
+  display:flex;
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.nav-btn{
+  flex:1;
+  padding:11px 4px 9px;
+  text-align:center;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:all .2s;
+  position:relative;
+}
+
+.nav-btn.active{border-bottom-color:var(--teal)}
+.nav-btn.active .nav-label{color:var(--teal)}
+
+.nav-icon{font-size:19px;display:block;margin-bottom:2px}
+.nav-label{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--text3);text-transform:uppercase;transition:color .2s}
+
+/* ── PAGES ── */
+.page{display:none;padding:16px;position:relative;z-index:1;padding-bottom:32px}
+.page.active{display:block}
+
+/* ── SECTION TITLE ── */
+.section-title{
+  font-family:'Rajdhani',sans-serif;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:2.5px;
+  color:var(--teal3);
+  text-transform:uppercase;
+  margin:20px 0 10px;
+}
+
+/* ── PLAN CARDS ── */
+.plan-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:10px;
+  cursor:pointer;
+  transition:all .2s;
+  position:relative;
+  overflow:hidden;
+}
+
+.plan-card::before{
+  content:'';
+  position:absolute;
+  top:0;right:0;
+  width:80px;height:80px;
+  background:radial-gradient(circle, rgba(0,212,200,0.06) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+.plan-card:active{transform:scale(0.98)}
+
+.plan-card.best{
+  border-color:rgba(0,212,200,0.35);
+  background:linear-gradient(135deg, rgba(0,212,200,0.06) 0%, var(--card) 60%);
+}
+
+.plan-badge{
+  position:absolute;
+  top:12px;right:12px;
+  background:linear-gradient(135deg, var(--teal), var(--teal2));
+  color:#000;
+  font-size:9px;
+  font-weight:700;
+  font-family:'Rajdhani',sans-serif;
+  letter-spacing:1.5px;
+  padding:3px 9px;
+  border-radius:20px;
+}
+
+.plan-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+
+.plan-left{display:flex;align-items:center;gap:10px}
+.plan-emoji{font-size:26px}
+
+.plan-name-block{}
+.plan-name{
+  font-family:'Rajdhani',sans-serif;
+  font-size:17px;
+  font-weight:700;
+  letter-spacing:1px;
+}
+.plan-days{font-size:12px;color:var(--text3);margin-top:1px}
+
+.plan-price-block{text-align:right}
+.plan-old{
+  font-size:12px;
+  color:var(--text3);
+  text-decoration:line-through;
+  line-height:1.2;
+}
+.plan-price{
+  font-family:'Rajdhani',sans-serif;
+  font-size:22px;
+  font-weight:700;
+  color:var(--teal);
+  line-height:1;
+}
+.plan-unit{font-size:12px;color:var(--text2)}
+
+.plan-discount{
+  display:inline-block;
+  background:linear-gradient(135deg, rgba(255,79,109,0.2), rgba(255,79,109,0.1));
+  border:1px solid rgba(255,79,109,0.3);
+  color:#ff7a8a;
+  font-size:10px;
+  font-weight:700;
+  font-family:'Rajdhani',sans-serif;
+  letter-spacing:1px;
+  padding:2px 7px;
+  border-radius:20px;
+  margin-top:3px;
+}
+
+.plan-features{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.plan-feat{
+  font-size:11px;
+  color:var(--text2);
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.06);
+  padding:3px 9px;
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+
+/* ── BUY BTN ── */
+.btn-primary{
+  width:100%;
+  background:linear-gradient(135deg, var(--teal), var(--teal2));
+  border:none;
+  border-radius:14px;
+  padding:15px;
+  font-family:'Rajdhani',sans-serif;
+  font-size:17px;
+  font-weight:700;
+  letter-spacing:2px;
+  color:#000;
+  cursor:pointer;
+  margin-top:8px;
+  transition:all .2s;
+  box-shadow:0 4px 24px rgba(0,212,200,0.3);
+  position:relative;
+  overflow:hidden;
+}
+
+.btn-primary::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  pointer-events:none;
+}
+
+.btn-primary:active{transform:scale(0.98);box-shadow:0 2px 12px rgba(0,212,200,0.2)}
+
+.btn-secondary{
+  width:100%;
+  background:transparent;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:13px;
+  font-family:'Rajdhani',sans-serif;
+  font-size:15px;
+  font-weight:600;
+  letter-spacing:2px;
+  color:var(--teal);
+  cursor:pointer;
+  margin-top:8px;
+  transition:all .2s;
+}
+
+.btn-secondary:active{background:rgba(0,212,200,0.05)}
+
+/* ── ACCOUNT ── */
+.sub-card{
+  background:linear-gradient(135deg, rgba(0,180,160,0.1) 0%, rgba(0,80,120,0.1) 100%);
+  border:1px solid rgba(0,212,200,0.2);
+  border-radius:20px;
+  padding:22px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  margin-bottom:16px;
+}
+
+.sub-card::before{
+  content:'';
+  position:absolute;
+  top:-30px;left:50%;
+  transform:translateX(-50%);
+  width:200px;height:200px;
+  background:radial-gradient(circle, rgba(0,212,200,0.1) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+.sub-status-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  font-size:12px;
+  font-weight:600;
+  font-family:'Rajdhani',sans-serif;
+  letter-spacing:1.5px;
+  padding:5px 14px;
+  border-radius:20px;
+  margin-bottom:14px;
+}
+
+.sub-status-pill.active{
+  background:rgba(0,229,160,0.12);
+  border:1px solid rgba(0,229,160,0.25);
+  color:var(--green);
+}
+
+.sub-status-pill.inactive{
+  background:rgba(255,79,109,0.12);
+  border:1px solid rgba(255,79,109,0.25);
+  color:var(--red);
+}
+
+.sub-pulse{
+  width:6px;height:6px;
+  border-radius:50%;
+  background:currentColor;
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:0.5;transform:scale(0.7)}
+}
+
+.sub-plan-name{
+  font-family:'Rajdhani',sans-serif;
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:2px;
+  margin-bottom:4px;
+}
+
+.sub-days-num{
+  font-family:'Rajdhani',sans-serif;
+  font-size:60px;
+  font-weight:900;
+  line-height:1;
+  background:linear-gradient(135deg, var(--teal), #fff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin:10px 0 2px;
+}
+
+.sub-days-txt{
+  font-size:13px;
+  color:var(--text3);
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+.progress-track{
+  background:rgba(255,255,255,0.06);
+  border-radius:10px;
+  height:4px;
+  margin:14px 0 6px;
+  overflow:hidden;
+}
+
+.progress-fill{
+  height:100%;
+  border-radius:10px;
+  background:linear-gradient(90deg, var(--teal3), var(--teal));
+  transition:width 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+.progress-meta{
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  color:var(--text3);
+}
+
+/* link box */
+.link-card{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:12px;
+  cursor:pointer;
+  position:relative;
+}
+
+.link-label{
+  font-size:11px;
+  font-family:'Rajdhani',sans-serif;
+  letter-spacing:2px;
+  color:var(--teal3);
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+
+.link-value{
+  font-size:11px;
+  color:var(--text2);
+  font-family:'SF Mono','Fira Code',monospace;
+  word-break:break-all;
+  line-height:1.5;
+}
+
+.link-copy{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin-top:10px;
+  font-size:12px;
+  color:var(--teal);
+  font-weight:600;
+}
+
+/* ── NO SUB ── */
+.nosub{
+  text-align:center;
+  padding:44px 20px;
+}
+
+.nosub-icon{
+  width:88px;height:88px;
+  margin:0 auto 20px;
+  filter:grayscale(0.3) drop-shadow(0 0 16px rgba(0,212,200,0.2));
+}
+
+.nosub-title{
+  font-family:'Rajdhani',sans-serif;
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:2px;
+  margin-bottom:8px;
+}
+
+.nosub-text{font-size:14px;color:var(--text2);margin-bottom:26px;line-height:1.6}
+
+/* ── HOWTO ── */
+.platform-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:16px;
+}
+
+.platform-btn{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px 10px;
+  text-align:center;
+  cursor:pointer;
+  transition:all .2s;
+}
+
+.platform-btn.active{
+  border-color:rgba(0,212,200,0.4);
+  background:rgba(0,212,200,0.06);
+}
+
+.platform-btn:active{transform:scale(0.96)}
+.platform-icon{font-size:32px;margin-bottom:6px}
+.platform-name{
+  font-family:'Rajdhani',sans-serif;
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:1px;
+}
+
+.steps-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+  display:none;
+  animation:fadeIn .25s ease;
+}
+
+.steps-card.show{display:block}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.step{
+  display:flex;
+  gap:12px;
+  margin-bottom:16px;
+  align-items:flex-start;
+}
+
+.step:last-child{margin-bottom:0}
+
+.step-n{
+  width:26px;height:26px;
+  border-radius:50%;
+  background:linear-gradient(135deg, var(--teal), var(--teal2));
+  color:#000;
+  font-family:'Rajdhani',sans-serif;
+  font-size:14px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+
+.step-txt{font-size:14px;color:var(--text2);line-height:1.55}
+.step-txt b{color:var(--text)}
+.step-txt a{color:var(--teal);text-decoration:none}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;
+  bottom:90px;
+  left:50%;
+  transform:translateX(-50%) translateY(10px);
+  background:var(--green);
+  color:#000;
+  font-family:'Rajdhani',sans-serif;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  padding:10px 22px;
+  border-radius:24px;
+  opacity:0;
+  transition:all .3s;
+  pointer-events:none;
+  z-index:999;
+  white-space:nowrap;
+}
+
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── SELECTED PLAN ── */
+.selected-plan{
+  background:linear-gradient(135deg, rgba(0,180,160,0.12), rgba(0,80,120,0.1));
+  border:1px solid rgba(0,212,200,0.25);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:12px;
+  display:none;
+  animation:fadeIn .2s ease;
+}
+
+.selected-plan.show{display:block}
+
+.sel-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.sel-label{font-size:12px;color:var(--text3);font-family:'Rajdhani',sans-serif;letter-spacing:1px;text-transform:uppercase}
+.sel-val{
+  font-family:'Rajdhani',sans-serif;
+  font-size:16px;font-weight:700;
+}
+</style>
+</head>
+<body>
+
+<!-- SVG logo defs -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00d4c8"/>
+      <stop offset="100%" stop-color="#0066a0"/>
+    </linearGradient>
+    <linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#003060"/>
+      <stop offset="100%" stop-color="#001830"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- ── HEADER ── -->
+<header class="header">
+  <div class="logo-wrap">
+    <svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
+      <!-- Shield -->
+      <path d="M50 4 L88 18 L88 52 Q88 78 50 98 Q12 78 12 52 L12 18 Z" fill="url(#lg2)" stroke="url(#lg1)" stroke-width="2"/>
+      <!-- Shield inner lines -->
+      <path d="M50 4 L88 18 L88 52 Q88 78 50 98 Q12 78 12 52 L12 18 Z" fill="none" stroke="rgba(0,212,200,0.25)" stroke-width="0.8"/>
+      <!-- Diagonal lines on shield -->
+      <line x1="20" y1="30" x2="55" y2="90" stroke="rgba(0,212,200,0.12)" stroke-width="0.8"/>
+      <line x1="35" y1="15" x2="75" y2="85" stroke="rgba(0,212,200,0.12)" stroke-width="0.8"/>
+      <line x1="25" y1="50" x2="80" y2="40" stroke="rgba(0,212,200,0.12)" stroke-width="0.8"/>
+      <!-- Boar body simplified -->
+      <ellipse cx="50" cy="55" rx="24" ry="22" fill="#0a2040" opacity="0.9"/>
+      <!-- Boar head -->
+      <ellipse cx="50" cy="44" rx="18" ry="16" fill="#0d2d50"/>
+      <!-- Ears -->
+      <path d="M34 35 L30 22 L40 32 Z" fill="#0d3560"/>
+      <path d="M66 35 L70 22 L60 32 Z" fill="#0d3560"/>
+      <!-- Ear inner -->
+      <path d="M35 33 L32 24 L39 31 Z" fill="#005580"/>
+      <path d="M65 33 L68 24 L61 31 Z" fill="#005580"/>
+      <!-- Snout -->
+      <ellipse cx="50" cy="54" rx="10" ry="7" fill="#0a2840"/>
+      <ellipse cx="47" cy="54" rx="2.5" ry="2" fill="#001828"/>
+      <ellipse cx="53" cy="54" rx="2.5" ry="2" fill="#001828"/>
+      <!-- Eyes -->
+      <ellipse cx="42" cy="44" rx="4" ry="3.5" fill="#001828"/>
+      <ellipse cx="58" cy="44" rx="4" ry="3.5" fill="#001828"/>
+      <ellipse cx="43" cy="43.5" rx="1.8" ry="1.5" fill="#00c8c0"/>
+      <ellipse cx="59" cy="43.5" rx="1.8" ry="1.5" fill="#00c8c0"/>
+      <!-- Tusks -->
+      <path d="M44 58 L38 66 L41 67 L46 59 Z" fill="#c8e8e8"/>
+      <path d="M56 58 L62 66 L59 67 L54 59 Z" fill="#c8e8e8"/>
+      <!-- Fur lines -->
+      <path d="M36 40 Q34 36 36 32" stroke="#005580" stroke-width="1" fill="none"/>
+      <path d="M40 37 Q38 33 40 29" stroke="#005580" stroke-width="0.8" fill="none"/>
+      <path d="M64 40 Q66 36 64 32" stroke="#005580" stroke-width="1" fill="none"/>
+      <path d="M60 37 Q62 33 60 29" stroke="#005580" stroke-width="0.8" fill="none"/>
+      <!-- Shield border glow -->
+      <path d="M50 4 L88 18 L88 52 Q88 78 50 98 Q12 78 12 52 L12 18 Z" fill="none" stroke="url(#lg1)" stroke-width="1.5" opacity="0.8"/>
+      <!-- Wifi signal -->
+      <path d="M70 20 Q78 14 86 20" stroke="#00d4c8" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M73 24 Q78 20 83 24" stroke="#00d4c8" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <circle cx="78" cy="27.5" r="1.5" fill="#00d4c8"/>
+    </svg>
+  </div>
+  <div class="brand-name">HRYAK</div>
+  <div class="brand-vpn"><span>VPN</span></div>
+  <div class="brand-tagline">Быстро · Надёжно · Приватно</div>
+</header>
+
+<!-- ── SALE BANNER ── -->
+<div class="sale-banner" id="saleBanner">
+  <div class="sale-fire">🔥</div>
+  <div class="sale-info">
+    <div class="sale-title">РАСПРОДАЖА</div>
+    <div class="sale-sub">Скидки до 50% — <span id="saleEndText"></span></div>
+  </div>
+  <div class="sale-countdown">
+    <div class="sale-time" id="saleTimer">—</div>
+    <div class="sale-time-label">осталось</div>
+  </div>
+</div>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <div class="nav-btn active" onclick="switchTab('plans',this)">
+    <span class="nav-icon">⚡</span>
+    <span class="nav-label">Тарифы</span>
+  </div>
+  <div class="nav-btn" onclick="switchTab('account',this)">
+    <span class="nav-icon">🛡</span>
+    <span class="nav-label">Аккаунт</span>
+  </div>
+  <div class="nav-btn" onclick="switchTab('howto',this)">
+    <span class="nav-icon">📡</span>
+    <span class="nav-label">Подключение</span>
+  </div>
+</nav>
+
+<!-- ════════ PLANS ════════ -->
+<div id="page-plans" class="page active">
+
+  <div id="plansContainer"></div>
+
+  <div class="selected-plan" id="selectedPlan">
+    <div class="sel-row">
+      <span class="sel-label">Выбран тариф</span>
+      <span class="sel-val" id="selPlanName">—</span>
+    </div>
+    <div class="sel-row">
+      <span class="sel-label">К оплате</span>
+      <span class="sel-val" style="color:var(--teal)" id="selPlanPrice">—</span>
+    </div>
+    <button class="btn-primary" id="confirmBuyBtn">КУПИТЬ ЗА <span id="buyBtnPrice"></span> ⭐</button>
+  </div>
+
+</div>
+
+<!-- ════════ ACCOUNT ════════ -->
+<div id="page-account" class="page">
+  <div id="accountContainer"></div>
+</div>
+
+<!-- ════════ HOWTO ════════ -->
+<div id="page-howto" class="page">
+
+  <div class="platform-grid">
+    <div class="platform-btn" id="btn-android" onclick="selectPlatform('android')">
+      <div class="platform-icon">🤖</div>
+      <div class="platform-name">ANDROID</div>
+    </div>
+    <div class="platform-btn" id="btn-ios" onclick="selectPlatform('ios')">
+      <div class="platform-icon">🍎</div>
+      <div class="platform-name">iOS</div>
+    </div>
+    <div class="platform-btn" id="btn-windows" onclick="selectPlatform('windows')">
+      <div class="platform-icon">🖥</div>
+      <div class="platform-name">WINDOWS</div>
+    </div>
+    <div class="platform-btn" id="btn-macos" onclick="selectPlatform('macos')">
+      <div class="platform-icon">🍏</div>
+      <div class="platform-name">macOS</div>
+    </div>
+  </div>
+
+  <div class="steps-card" id="stepsCard"></div>
+
+</div>
+
+<div class="toast" id="toast">✅ ССЫЛКА СКОПИРОВАНА</div>
+
+<script>
+const tg = window.Telegram.WebApp;
+tg.ready();
+tg.expand();
+tg.setHeaderColor('#0b0d14');
+tg.setBackgroundColor('#0b0d14');
+
+// ── DATA ─────────────────────────────────────────────────────────────────────
+const SALE_END_DATE = new Date("2026-04-18T23:59:59");
+const IS_SALE = new Date() < SALE_END_DATE;
+
+const PLANS = [
+  {key:"1m",  emoji:"🥉", name:"1 МЕСЯЦ",   days:30,  price:IS_SALE?149:200, old:200},
+  {key:"3m",  emoji:"🥈", name:"3 МЕСЯЦА",  days:90,  price:IS_SALE?299:600, old:600,  best:true},
+  {key:"6m",  emoji:"🥇", name:"6 МЕСЯЦЕВ", days:180, price:IS_SALE?599:1100, old:1100},
+  {key:"12m", emoji:"💎", name:"1 ГОД",     days:365, price:IS_SALE?1099:2000, old:2000},
+];
+
+// Здесь будут реальные данные из Telegram initData
+const USER = { hasSub:false, plan:"3m", daysLeft:0, totalDays:90, vlessLink:null };
+
+let selectedPlan = null;
+
+// ── SALE BANNER ───────────────────────────────────────────────────────────────
+function updateSale() {
+  if (!IS_SALE) return;
+  document.getElementById('saleBanner').classList.add('visible');
+
+  const months = ["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
+  document.getElementById('saleEndText').textContent =
+    `до ${SALE_END_DATE.getDate()} ${months[SALE_END_DATE.getMonth()]}`;
+
+  function tick() {
+    const diff = SALE_END_DATE - new Date();
+    if (diff <= 0) { document.getElementById('saleTimer').textContent = "0д 0ч"; return; }
+    const d = Math.floor(diff/86400000);
+    const h = Math.floor((diff%86400000)/3600000);
+    const m = Math.floor((diff%3600000)/60000);
+    document.getElementById('saleTimer').textContent =
+      d > 0 ? `${d}д ${h}ч` : `${h}ч ${m}м`;
+  }
+  tick();
+  setInterval(tick, 60000);
+}
+updateSale();
+
+// ── PLANS ─────────────────────────────────────────────────────────────────────
+function renderPlans() {
+  const c = document.getElementById('plansContainer');
+  c.innerHTML = PLANS.map(p => {
+    const disc = IS_SALE ? Math.round((1 - p.price/p.old)*100) : 0;
+    return `
+    <div class="plan-card ${p.best?'best':''}" onclick="selectPlan('${p.key}')">
+      ${p.best ? '<div class="plan-badge">ХИТ ПРОДАЖ</div>' : ''}
+      <div class="plan-row">
+        <div class="plan-left">
+          <span class="plan-emoji">${p.emoji}</span>
+          <div class="plan-name-block">
+            <div class="plan-name">${p.name}</div>
+            <div class="plan-days">${p.days} дней</div>
+          </div>
+        </div>
+        <div class="plan-price-block">
+          ${IS_SALE && disc>0 ? `<div class="plan-old">${p.old} ⭐</div>` : ''}
+          <div class="plan-price">${p.price}</div>
+          <div class="plan-unit">⭐ STARS</div>
+          ${disc>0 ? `<div class="plan-discount">-${disc}%</div>` : ''}
+        </div>
+      </div>
+      <div class="plan-features">
+        <span class="plan-feat">♾ Безлимит</span>
+        <span class="plan-feat">📱 3 устройства</span>
+        <span class="plan-feat">⚡ Высокая скорость</span>
+        <span class="plan-feat">🌍 Польша</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectPlan(key) {
+  tg.HapticFeedback.impactOccurred('light');
+  selectedPlan = PLANS.find(p => p.key === key);
+
+  document.querySelectorAll('.plan-card').forEach((c,i) => {
+    c.style.borderColor = PLANS[i].key === key
+      ? 'rgba(0,212,200,0.5)'
+      : (PLANS[i].best ? 'rgba(0,212,200,0.35)' : 'rgba(0,210,200,0.12)');
+  });
+
+  const sel = document.getElementById('selectedPlan');
+  document.getElementById('selPlanName').textContent = selectedPlan.name;
+  document.getElementById('selPlanPrice').textContent = `${selectedPlan.price} ⭐`;
+  document.getElementById('buyBtnPrice').textContent = selectedPlan.price;
+  sel.classList.add('show');
+}
+
+document.getElementById('confirmBuyBtn').onclick = () => {
+  if (!selectedPlan) return;
+  tg.HapticFeedback.impactOccurred('medium');
+  tg.sendData(JSON.stringify({ action:'buy', plan:selectedPlan.key, price:selectedPlan.price }));
+};
+
+// ── ACCOUNT ───────────────────────────────────────────────────────────────────
+function renderAccount() {
+  const c = document.getElementById('accountContainer');
+
+  if (!USER.hasSub) {
+    const boarSvg = document.querySelector('.logo-wrap').innerHTML;
+    c.innerHTML = `
+      <div class="nosub">
+        <div class="nosub-icon">${boarSvg}</div>
+        <div class="nosub-title">НЕТ ПОДПИСКИ</div>
+        <div class="nosub-text">Купи подписку, чтобы получить<br>защищённый VPN-доступ</div>
+        <button class="btn-primary" onclick="switchTab('plans',document.querySelector('.nav-btn'))">
+          ⚡ КУПИТЬ ПОДПИСКУ
+        </button>
+      </div>`;
+    return;
+  }
+
+  const plan = PLANS.find(p=>p.key===USER.plan)||PLANS[1];
+  const prog = Math.min(100, Math.round((USER.daysLeft/USER.totalDays)*100));
+
+  c.innerHTML = `
+    <div class="sub-card">
+      <div class="sub-status-pill active">
+        <span class="sub-pulse"></span> АКТИВНА
+      </div>
+      <div class="sub-plan-name">${plan.emoji} ${plan.name}</div>
+      <div class="sub-days-num">${USER.daysLeft}</div>
+      <div class="sub-days-txt">ДНЕЙ ОСТАЛОСЬ</div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width:${prog}%"></div>
+      </div>
+      <div class="progress-meta">
+        <span>Начало</span>
+        <span>Истекает</span>
+      </div>
+    </div>
+
+    ${USER.vlessLink ? `
+    <div class="section-title">VLESS-ссылка</div>
+    <div class="link-card" onclick="copyLink('${USER.vlessLink}')">
+      <div class="link-label">Твой ключ подключения</div>
+      <div class="link-value">${USER.vlessLink.substring(0,90)}...</div>
+      <div class="link-copy">📋 Нажми чтобы скопировать</div>
+    </div>
+    ` : ''}
+
+    <button class="btn-primary" onclick="switchTab('plans',document.querySelectorAll('.nav-btn')[0])" style="margin-top:4px">
+      🔄 ПРОДЛИТЬ ПОДПИСКУ
+    </button>
+    <button class="btn-secondary" onclick="switchTab('howto',document.querySelectorAll('.nav-btn')[2])">
+      📡 КАК ПОДКЛЮЧИТЬСЯ
+    </button>
+  `;
+}
+
+function copyLink(link) {
+  navigator.clipboard.writeText(link).then(() => {
+    tg.HapticFeedback.notificationOccurred('success');
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  });
+}
+
+// ── HOWTO ─────────────────────────────────────────────────────────────────────
+const HOWTO = {
+  android:[
+    {t:'Скачай <b>v2rayNG</b> из <a href="https://play.google.com/store/apps/details?id=com.v2ray.ang">Google Play</a>'},
+    {t:'Открой → нажми <b>+</b> в правом верхнем углу'},
+    {t:'Выбери <b>«Import config from clipboard»</b>'},
+    {t:'Вставь свою VLESS-ссылку из раздела <b>Аккаунт</b>'},
+    {t:'Нажми ▶ для подключения. Готово! ✅'},
+  ],
+  ios:[
+    {t:'Скачай <b>Streisand</b> из <a href="https://apps.apple.com/app/streisand/id6450534064">App Store</a>'},
+    {t:'Открой → нажми <b>+</b> в верхнем углу'},
+    {t:'Выбери <b>«Import from clipboard»</b>'},
+    {t:'Вставь свою VLESS-ссылку из раздела <b>Аккаунт</b>'},
+    {t:'Нажми подключиться. Готово! ✅'},
+  ],
+  windows:[
+    {t:'Скачай <b>Hiddify</b> с <a href="https://github.com/hiddify/hiddify-app/releases/latest">GitHub</a> — файл <b>.exe</b>'},
+    {t:'Установи и запусти приложение'},
+    {t:'Нажми <b>«+»</b> → <b>«Add from clipboard»</b>'},
+    {t:'Вставь свою VLESS-ссылку из раздела <b>Аккаунт</b>'},
+    {t:'Нажми <b>Connect</b>. Готово! ✅'},
+  ],
+  macos:[
+    {t:'Скачай <b>Hiddify</b> с <a href="https://github.com/hiddify/hiddify-app/releases/latest">GitHub</a> — файл <b>.dmg</b>'},
+    {t:'Перетащи в Applications и запусти'},
+    {t:'Нажми <b>«+»</b> → <b>«Add from clipboard»</b>'},
+    {t:'Вставь свою VLESS-ссылку из раздела <b>Аккаунт</b>'},
+    {t:'Нажми <b>Connect</b>. Готово! ✅'},
+  ],
+};
+
+function selectPlatform(p) {
+  tg.HapticFeedback.selectionChanged();
+  document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-'+p).classList.add('active');
+
+  const card = document.getElementById('stepsCard');
+  card.innerHTML = HOWTO[p].map((s,i)=>`
+    <div class="step">
+      <div class="step-n">${i+1}</div>
+      <div class="step-txt">${s.t}</div>
+    </div>
+  `).join('');
+  card.classList.add('show');
+}
+
+// ── TAB SWITCH ────────────────────────────────────────────────────────────────
+function switchTab(name, el) {
+  tg.HapticFeedback.selectionChanged();
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if (el) el.classList.add('active');
+  tg.MainButton.hide();
+  if (name==='account') renderAccount();
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+renderPlans();
+</script>
+</body>
+</html>
