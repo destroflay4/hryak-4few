@@ -215,6 +215,7 @@ tg.expand();
 tg.setHeaderColor('#0b0d14');
 tg.setBackgroundColor('#0b0d14');
 
+// Имя твоего бота для реферальных ссылок и платежей
 const BOT_USERNAME = 'HryakVpn_bot'; 
 
 const SALE_END_DATE = new Date("2026-04-18T23:59:59");
@@ -320,17 +321,17 @@ function selectPlan(key) {
 
 function actionBuy(key) {
     tg.HapticFeedback.impactOccurred('medium');
-    tg.openTelegramLink(`https://t.me/${HryakVpn_bot}?start=buy_${key}`);
+    tg.openTelegramLink(`https://t.me/${BOT_USERNAME}?start=buy_${key}`);
 }
 
 function actionTrial() {
     tg.HapticFeedback.impactOccurred('medium');
-    tg.openTelegramLink(`https://t.me/${HryakVpn_bot}?start=trial`);
+    tg.openTelegramLink(`https://t.me/${BOT_USERNAME}?start=trial`);
 }
 
 function renderAccount() {
   const c = document.getElementById('accountContainer');
-  const refLink = `https://t.me/${HryakVpn_bot}?start=ref_${USER.id}`;
+  const refLink = `https://t.me/${BOT_USERNAME}?start=ref_${USER.id}`;
 
   let accountHtml = '';
 
@@ -370,7 +371,7 @@ function renderAccount() {
     <div class="section-title" style="margin-top: 30px;">🎁 ПРИВЕДИ ДРУГА</div>
     <div class="sub-card" style="padding:16px; text-align:left; background: var(--card);">
         <p style="font-size:13px; color:var(--text2); margin-bottom:12px; line-height: 1.5;">
-            Поделись ссылкой! Друг получит скидку <b>50%</b> на первую покупку, а ты — <b>20%</b> на продление! <i>(не суммируется с другими акциями)</i>
+            Поделись ссылкой! Друг получит скидку <b>50%</b> на первую покупку, а ты — <b>20%</b> на продление!
         </p>
         <div class="link-card" onclick="copyLink('${refLink}')" style="margin-bottom:0; background: var(--bg2);">
             <div class="link-label">Твоя реферальная ссылка</div>
