@@ -71,30 +71,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 .btn-primary{width:100%;background:linear-gradient(135deg,var(--teal),var(--teal2));border:none;border-radius:14px;padding:15px;font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;letter-spacing:2px;color:#000;cursor:pointer;margin-top:8px;transition:all .2s;box-shadow:0 4px 24px rgba(0,212,200,0.3);position:relative;overflow:hidden;}
 .btn-primary:active{transform:scale(0.98);box-shadow:0 2px 12px rgba(0,212,200,0.2);}
-.btn-secondary{width:100%;background:transparent;border:1px solid var(--border);border-radius:14px;padding:13px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;letter-spacing:2px;color:var(--teal);cursor:pointer;margin-top:8px;transition:all .2s;}
-.btn-secondary:active{background:rgba(0,212,200,0.05);}
 
 .sub-card{background:linear-gradient(135deg,rgba(0,180,160,0.1) 0%,rgba(0,80,120,0.1) 100%);border:1px solid rgba(0,212,200,0.2);border-radius:20px;padding:22px;text-align:center;position:relative;overflow:hidden;margin-bottom:16px;}
-.sub-status-pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;font-family:'Rajdhani',sans-serif;letter-spacing:1.5px;padding:5px 14px;border-radius:20px;margin-bottom:14px;}
-.sub-status-pill.active{background:rgba(0,229,160,0.12);border:1px solid rgba(0,229,160,0.25);color:var(--green);}
-.sub-pulse{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
-.sub-plan-name{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:2px;margin-bottom:4px;}
-.sub-days-num{font-family:'Rajdhani',sans-serif;font-size:60px;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--teal),#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:10px 0 2px;}
-.sub-days-txt{font-size:13px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;}
-.progress-track{background:rgba(255,255,255,0.06);border-radius:10px;height:4px;margin:14px 0 6px;overflow:hidden;}
-.progress-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--teal3),var(--teal));transition:width 1.2s;}
-.progress-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);}
 
 .link-card{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;cursor:pointer;}
 .link-label{font-size:11px;font-family:'Rajdhani',sans-serif;letter-spacing:2px;color:var(--teal3);text-transform:uppercase;margin-bottom:8px;}
 .link-value{font-size:11px;color:var(--text2);font-family:monospace;word-break:break-all;line-height:1.5;}
 .link-copy{display:flex;align-items:center;gap:5px;margin-top:10px;font-size:12px;color:var(--teal);font-weight:600;}
-
-.nosub{text-align:center;padding:44px 20px;}
-.nosub-icon{width:88px;height:88px;margin:0 auto 20px;filter:grayscale(0.3) drop-shadow(0 0 16px rgba(0,212,200,0.2));}
-.nosub-title{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:2px;margin-bottom:8px;}
-.nosub-text{font-size:14px;color:var(--text2);margin-bottom:26px;line-height:1.6;}
 
 .platform-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
 .platform-btn{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 10px;text-align:center;cursor:pointer;transition:all .2s;}
@@ -178,9 +161,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <span class="nav-icon">⚡</span>
     <span class="nav-label">Тарифы</span>
   </div>
-  <div class="nav-btn" onclick="switchTab('account',this)">
-    <span class="nav-icon">🛡</span>
-    <span class="nav-label">Аккаунт</span>
+  <div class="nav-btn" onclick="switchTab('bonus',this)">
+    <span class="nav-icon">🎁</span>
+    <span class="nav-label">Бонусы</span>
   </div>
   <div class="nav-btn" onclick="switchTab('howto',this)">
     <span class="nav-icon">📡</span>
@@ -192,8 +175,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <div id="plansContainer"></div>
 </div>
 
-<div id="page-account" class="page">
-  <div id="accountContainer"></div>
+<div id="page-bonus" class="page">
+  <div id="bonusContainer"></div>
 </div>
 
 <div id="page-howto" class="page">
@@ -215,7 +198,6 @@ tg.expand();
 tg.setHeaderColor('#0b0d14');
 tg.setBackgroundColor('#0b0d14');
 
-// ВАЖНО: Имя твоего бота для корректной работы ссылок и оплат
 const BOT_USERNAME = 'HryakVpn_bot'; 
 
 const SALE_END_DATE = new Date("2026-04-18T23:59:59");
@@ -228,15 +210,8 @@ const PLANS = [
   {key:"12m", emoji:"💎", name:"1 ГОД",     days:365, price:IS_SALE?1099:2000, old:2000},
 ];
 
-const USER = { 
-    id: tg.initDataUnsafe?.user?.id || '123456789',
-    hasSub: false, 
-    trialUsed: false, 
-    plan: "3m", 
-    daysLeft: 0, 
-    totalDays: 90, 
-    vlessLink: null 
-};
+// Получаем ID пользователя напрямую из Телеграма! Бэкенд не нужен.
+const USER_ID = tg.initDataUnsafe?.user?.id || 'NO_ID';
 
 function updateSale() {
   if (!IS_SALE) return;
@@ -258,23 +233,19 @@ function updateSale() {
 updateSale();
 
 function renderPlans() {
-  let html = '';
-  
-  if (!USER.trialUsed && !USER.hasSub) {
-      html += `
-      <div class="plan-card" style="border-color:var(--green); margin-bottom: 20px;">
-          <div class="plan-row" style="margin-bottom:0">
-              <div class="plan-left">
-                  <span class="plan-emoji">🎁</span>
-                  <div class="plan-name-block">
-                      <div class="plan-name">3 ДНЯ БЕСПЛАТНО</div>
-                      <div class="plan-days">Пробный период 5 ГБ</div>
-                  </div>
-              </div>
-          </div>
-          <button class="btn-primary" style="background:linear-gradient(135deg, #00e5a0, #00c080); color:#000; font-size:15px; padding:12px;" onclick="actionTrial()">⚡ АКТИВИРОВАТЬ</button>
-      </div>`;
-  }
+  let html = `
+    <div class="plan-card" style="border-color:var(--green); margin-bottom: 20px;">
+        <div class="plan-row" style="margin-bottom:0">
+            <div class="plan-left">
+                <span class="plan-emoji">🎁</span>
+                <div class="plan-name-block">
+                    <div class="plan-name">3 ДНЯ БЕСПЛАТНО</div>
+                    <div class="plan-days">Пробный период 5 ГБ</div>
+                </div>
+            </div>
+        </div>
+        <button class="btn-primary" style="background:linear-gradient(135deg, #00e5a0, #00c080); color:#000; font-size:15px; padding:12px;" onclick="actionTrial()">⚡ АКТИВИРОВАТЬ</button>
+    </div>`;
 
   html += PLANS.map(p => {
     const disc = IS_SALE ? Math.round((1 - p.price/p.old)*100) : 0;
@@ -329,62 +300,30 @@ function actionTrial() {
     tg.openTelegramLink(`https://t.me/${BOT_USERNAME}?start=trial`);
 }
 
-function renderAccount() {
-  const c = document.getElementById('accountContainer');
-  const refLink = `https://t.me/${BOT_USERNAME}?start=ref_${USER.id}`;
+function renderBonus() {
+  const c = document.getElementById('bonusContainer');
+  const refLink = USER_ID === 'NO_ID' ? 'Открой меню через кнопку в Телеграм' : `https://t.me/${BOT_USERNAME}?start=ref_${USER_ID}`;
 
-  let accountHtml = '';
-
-  if (!USER.hasSub) {
-    const boarSvg = document.querySelector('.logo-wrap').innerHTML;
-    accountHtml += `
-      <div class="nosub">
-        <div class="nosub-icon">${boarSvg}</div>
-        <div class="nosub-title">НЕТ ПОДПИСКИ</div>
-        <div class="nosub-text">Купи подписку, чтобы получить<br>защищённый VPN-доступ</div>
-        <button class="btn-primary" onclick="switchTab('plans',document.querySelector('.nav-btn'))">⚡ КУПИТЬ ПОДПИСКУ</button>
-      </div>`;
-  } else {
-    const plan = PLANS.find(p=>p.key===USER.plan)||PLANS[1];
-    const prog = Math.min(100, Math.round((USER.daysLeft/USER.totalDays)*100));
-    accountHtml += `
-      <div class="sub-card">
-        <div class="sub-status-pill active"><span class="sub-pulse"></span> АКТИВНА</div>
-        <div class="sub-plan-name">${plan.emoji} ${plan.name}</div>
-        <div class="sub-days-num">${USER.daysLeft}</div>
-        <div class="sub-days-txt">ДНЕЙ ОСТАЛОСЬ</div>
-        <div class="progress-track"><div class="progress-fill" style="width:${prog}%"></div></div>
-        <div class="progress-meta"><span>Начало</span><span>Истекает</span></div>
-      </div>
-      ${USER.vlessLink ? `
-      <div class="section-title">VLESS-ссылка</div>
-      <div class="link-card" onclick="copyLink('${USER.vlessLink}')">
-        <div class="link-label">Твой ключ подключения</div>
-        <div class="link-value">${USER.vlessLink.substring(0,60)}...</div>
-        <div class="link-copy">📋 Нажми чтобы скопировать</div>
-      </div>` : ''}
-      <button class="btn-primary" onclick="switchTab('plans',document.querySelectorAll('.nav-btn')[0])" style="margin-top:4px">🔄 ПРОДЛИТЬ ПОДПИСКУ</button>
-    `;
-  }
-
-  accountHtml += `
-    <div class="section-title" style="margin-top: 30px;">🎁 ПРИВЕДИ ДРУГА</div>
-    <div class="sub-card" style="padding:16px; text-align:left; background: var(--card);">
-        <p style="font-size:13px; color:var(--text2); margin-bottom:12px; line-height: 1.5;">
-            Поделись ссылкой! Друг получит скидку <b>50%</b> на первую покупку, а ты — <b>20%</b> на продление!
+  c.innerHTML = `
+    <div class="section-title">🎁 ПРИВЕДИ ДРУГА</div>
+    <div class="sub-card" style="padding:22px 16px; text-align:left; background: var(--card);">
+        <p style="font-size:14px; color:var(--text); margin-bottom:12px; line-height: 1.6;">
+            Поделись своей ссылкой! Твой друг получит мощную скидку <b>50%</b> на первую покупку.
+        </p>
+        <p style="font-size:14px; color:var(--text); margin-bottom:18px; line-height: 1.6;">
+            Как только друг оплатит тариф, ты автоматически получишь скидку <b>20%</b> на следующее продление!
         </p>
         <div class="link-card" onclick="copyLink('${refLink}')" style="margin-bottom:0; background: var(--bg2);">
             <div class="link-label">Твоя реферальная ссылка</div>
-            <div class="link-value">${refLink}</div>
-            <div class="link-copy">📋 Скопировать ссылку</div>
+            <div class="link-value" style="font-size: 13px;">${refLink}</div>
+            <div class="link-copy" style="font-size: 14px; margin-top: 14px;">📋 Скопировать ссылку</div>
         </div>
     </div>
   `;
-
-  c.innerHTML = accountHtml;
 }
 
 function copyLink(link) {
+  if (link.includes('NO_ID')) return;
   navigator.clipboard.writeText(link).then(() => {
     tg.HapticFeedback.notificationOccurred('success');
     const t = document.getElementById('toast');
@@ -398,28 +337,28 @@ const HOWTO = {
     {t:'Скачай <b>v2rayNG</b> из <a href="https://play.google.com/store/apps/details?id=com.v2ray.ang">Google Play</a>'},
     {t:'Открой → нажми <b>+</b> в правом верхнем углу'},
     {t:'Выбери <b>«Import config from clipboard»</b>'},
-    {t:'Вставь свою VLESS-ссылку из раздела <b>Аккаунт</b>'},
+    {t:'Вставь свою VLESS-ссылку (возьми её в меню бота <b>«👤 Мой аккаунт»</b>)'},
     {t:'Нажми ▶ для подключения. Готово! ✅'},
   ],
   ios:[
     {t:'Скачай <b>Streisand</b> из <a href="https://apps.apple.com/app/streisand/id6450534064">App Store</a>'},
     {t:'Открой → нажми <b>+</b> в верхнем углу'},
     {t:'Выбери <b>«Import from clipboard»</b>'},
-    {t:'Вставь свою VLESS-ссылку из раздела <b>Аккаунт</b>'},
+    {t:'Вставь свою VLESS-ссылку (возьми её в меню бота <b>«👤 Мой аккаунт»</b>)'},
     {t:'Нажми подключиться. Готово! ✅'},
   ],
   windows:[
     {t:'Скачай <b>Hiddify</b> с <a href="https://github.com/hiddify/hiddify-app/releases/latest">GitHub</a>'},
     {t:'Установи и запусти приложение'},
     {t:'Нажми <b>«+»</b> → <b>«Add from clipboard»</b>'},
-    {t:'Вставь свою VLESS-ссылку из раздела <b>Аккаунт</b>'},
+    {t:'Вставь свою VLESS-ссылку (возьми её в меню бота <b>«👤 Мой аккаунт»</b>)'},
     {t:'Нажми <b>Connect</b>. Готово! ✅'},
   ],
   macos:[
     {t:'Скачай <b>Hiddify</b> с <a href="https://github.com/hiddify/hiddify-app/releases/latest">GitHub</a>'},
     {t:'Перетащи в Applications и запусти'},
     {t:'Нажми <b>«+»</b> → <b>«Add from clipboard»</b>'},
-    {t:'Вставь свою VLESS-ссылку из раздела <b>Аккаунт</b>'},
+    {t:'Вставь свою VLESS-ссылку (возьми её в меню бота <b>«👤 Мой аккаунт»</b>)'},
     {t:'Нажми <b>Connect</b>. Готово! ✅'},
   ],
 };
@@ -439,7 +378,7 @@ function switchTab(name, el) {
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   if (el) el.classList.add('active');
-  if (name==='account') renderAccount();
+  if (name==='bonus') renderBonus();
 }
 
 renderPlans();
